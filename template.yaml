@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  discord-serverless-gateway
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  StageName:
+    Type: String
+    Description: Stage Name used in API GW
+    Default: Prod
+  DiscordAppPublicKey:
+    Type: String
+    Description: Discord App Public Key from Discord Dev Portal
+    Default: ABC123CED456
+
+Resources:
+  mainGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      MethodSettings:
+        - ResourcePath: /
+          HttpMethod: ANY
+
+  proxyGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      MethodSettings:
+        - ResourcePath: /
+          HttpMethod: ANY
+
+  helloFromLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/hello-from-lambda.helloFromLambdaHandler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: A Lambda function that returns a static string.
+      Policies:
+        # Give Lambda basic execution Permission to the helloFromLambda
+        - AWSLambdaBasicExecutionRole
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: ANY
+            RestApiId:
+              Ref: mainGateway
+
+  proxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/proxy-function.handler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: A Lambda function that returns a static string.
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+            RestApiId:
+              Ref: proxyGateway
+      Environment:
+        Variables:
+          MAIN_GATEWAY: !Sub "https://${mainGateway}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/"
+          PUBLIC_KEY: !Ref DiscordAppPublicKey
+
+Outputs:
+  ProxyGWEndpoint:
+    Description: "API Gateway endpoint URL to pass to Discord Application Portal"
+    Value: !Sub "https://${proxyGateway}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/"

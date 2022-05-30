@@ -1,0 +1,4 @@
+---
+- name: hello
+  type: 1
+  description: replies with hello world

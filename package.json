@@ -5,8 +5,9 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
+        "axios": "^0.27.2",
         "tweetnacl": "^1.0.3",
-        "axios": "^0.27.2"
+        "yaml": "^2.1.1"
     },
     "devDependencies": {
         "boxen": "4.0",

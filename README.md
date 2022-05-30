@@ -1,10 +1,49 @@
 # Discord Serverless Bot with Lambda Proxy
 
+## Introduction
 Discord Serverless Bot with Lambda Proxy is an example SAM application, that implements an additional API Gateway with Proxy Lambda Function, in order to split functions based on event's request body.
 
-Discord application sends all events to one endpoint URL. Interaction names are neither shown in request's path nor headers, therefore we cannot use API Gateway-native routing and have to use additional layer. 
-It prevents Discord Serverless Bot from becoming a Lambda Monolith.
+Discord application sends all events to one endpoint URL. Our architecture prevents Discord Serverless Bot from becoming a Lambda Monolith.
 
+## Architecture
+![architecture](./architecture.png)
+
+## Run it
+
+Prerequisites:
+- AWS SAM CLI
+- AWS User connected to CLI
+- Discord Application created and invited to guild
+
+
+### Register commands
+Register commands on one guild for development (instant):
+```
+node register_commands/register.js --env dev --guild-id YOUR_GUILD_ID --bot-token YOUR_BOT_TOKEN --app-id YOUR_APPLICATION_ID
+```
+Or register commands globally for production (up to 1h refresh):
+```
+node register_commands/register.js --env prod --bot-token YOUR_BOT_TOKEN --app-id YOUR_APPLICATION_ID
+```
+
+### Build and deploy
+Build and deploy with:
+```
+sam build && sam deploy --guided
+```
+
+## Add your own function
+1. Add command in `register_commands/commands.yaml` and register them again.
+2. Create handler for new function in `src/handlers/` similarly to existing ones.
+3. Add reference to new handler in `template.yaml` similarly to `helloFromLambdaFunction`. Change `Properties.Handler` and `Events.SNSEvent.Properties.FilterPolicy.command`.
+
+## Clean all
+```
+sam destroy
+```
+
+
+# Sidenotes
 
 This project contains source code and supporting files for a serverless application that you can deploy with the AWS Serverless Application Model (AWS SAM) command line interface (CLI). It includes the following files and folders:
 

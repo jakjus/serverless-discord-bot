@@ -1,4 +1,5 @@
 const boxen = require("boxen");
+const { devRegister, prodRegister } = require("./send");
 
 var yargs = require("yargs/yargs")(process.argv.slice(2))
   .usage('Usage: $0 [options]')
@@ -14,11 +15,15 @@ var yargs = require("yargs/yargs")(process.argv.slice(2))
   .nargs('g', 1)
   .describe('g', 'guild id from discord (only dev)')
 
+  .alias('a', 'app-id')
+  .nargs('a', 1)
+  .describe('a', 'app id from discord (only dev)')
+
   .alias('b', 'bot-token')
   .nargs('b', 1)
   .describe('b', 'bot token from discord developer portal')
 
-  .demandOption(['e', 'b'])
+  .demandOption(['e', 'b', 'a'])
 
   .help('h')
   .alias('h', 'help')
@@ -32,15 +37,13 @@ const main = () => {
     return
   }
 
-  //const boxenOptions = {
-  //  padding: 1,
-  //  margin: 1,
-  //  borderStyle: "round",
-  //  borderColor: "green",
-  //};
-  //const msgBox = boxen(yargs, boxenOptions);
+  if (yargs.env == 'dev') {
+    devRegister(yargs.appId, yargs.guildId, yargs.botToken)
+  }
 
-  console.log(msgBox);
+  if (yargs.env == 'prod') {
+    prodRegister(yargs.appId, yargs.botToken)
+  }
 }
 
 main()

@@ -16,13 +16,8 @@ Parameters:
     Default: ABC123CED456
 
 Resources:
-  mainGateway:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: Prod
-      MethodSettings:
-        - ResourcePath: /
-          HttpMethod: ANY
+  MainSNSTopic:
+    Type: AWS::SNS::Topic
 
   proxyGateway:
     Type: AWS::Serverless::Api
@@ -31,28 +26,6 @@ Resources:
       MethodSettings:
         - ResourcePath: /
           HttpMethod: ANY
-
-  helloFromLambdaFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/hello-from-lambda.helloFromLambdaHandler
-      Runtime: nodejs14.x
-      Architectures:
-        - x86_64
-      MemorySize: 128
-      Timeout: 100
-      Description: A Lambda function that returns a static string.
-      Policies:
-        # Give Lambda basic execution Permission to the helloFromLambda
-        - AWSLambdaBasicExecutionRole
-      Events:
-        ApiEvent:
-          Type: Api
-          Properties:
-            Path: /hello
-            Method: ANY
-            RestApiId:
-              Ref: mainGateway
 
   proxyFunction:
     Type: AWS::Serverless::Function
@@ -76,8 +49,30 @@ Resources:
               Ref: proxyGateway
       Environment:
         Variables:
-          MAIN_GATEWAY: !Sub "https://${mainGateway}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/"
           PUBLIC_KEY: !Ref DiscordAppPublicKey
+          TOPIC_ARN: !Ref MainSNSTopic
+
+  helloFromLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/hello-from-lambda.helloFromLambdaHandler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: A Lambda function that returns a static string.
+      Policies:
+        # Give Lambda basic execution Permission to the helloFromLambda
+        - AWSLambdaBasicExecutionRole
+      Events:
+        SNSEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref MainSNSTopic
+            FilterPolicy:
+              command:
+                - hello
 
 Outputs:
   ProxyGWEndpoint:

@@ -1,4 +1,5 @@
 const nacl = require('tweetnacl');
+const AWS = require('aws-sdk');
 
 exports.handler = async (event) => {
   const strBody = event.body; // should be string, for successful sign
@@ -34,14 +35,24 @@ exports.handler = async (event) => {
     }
   }
 
-  // Handle command (go to next API Gateway and split to one of Lambdas)
+  // Handle command (send to SNS and split to one of Lambdas)
   if (body.data.name) {
+    var eventText = JSON.stringify(body, null, 2);
+    var params = {
+        Message: eventText,
+        Subject: "Test SNS From Lambda",
+        TopicArn: process.env.TOPIC_ARN,
+        MessageAttributes: { "command": { DataType: 'String', StringValue: body.data.name } }
+    };
+    // Create promise and SNS service object
+    await new AWS.SNS({apiVersion: '2010-03-31'}).publish(params).promise();
+    
     return {
-      statusCode: 301,
-      headers: {
-        Location: process.env.MAIN_GATEWAY+body.data.name,
-      },
-      body: event.body,
+      statusCode: 200,
+      body: JSON.stringify({
+        "type": 4,
+        "data": { "content": "*⏳ Loading...*" }
+      })
     }
   }
 

@@ -1,15 +1,22 @@
 /**
  * A Lambda function that replies to interaction with static string
  */
+
+const axios = require('axios').default;
+
 exports.helloFromLambdaHandler = async (event) => {
-  const body = JSON.parse(event.body)
+  const body = JSON.parse(event.Records[0].Sns.Message)
   // May do something here with body
   // Body contains Discord command details
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      "type": 4,
-      "data": { "content": "Hello from Lambda!" }
-    })
+  let response = {
+    "content": "Hello from Lambda!"
   }
+
+  await axios.patch(`https://discord.com/api/v10/webhooks/${body.application_id}/${body.token}/messages/@original`, response)
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 }

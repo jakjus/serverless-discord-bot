@@ -1,12 +1,15 @@
 {
-    "name": "replaced-by-user-input",
-    "description": "replaced-by-user-input",
+    "name": "serverless-discord-bot",
+    "description": "Bolerplate for Serverless Discord Bot on AWS using AWS SAM.",
+    "author": "jakjus",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "tweetnacl": "^1.0.3"
+        "tweetnacl": "^1.0.3",
+        "axios": "^0.27.2"
     },
     "devDependencies": {
+        "boxen": "4.0",
         "jest": "^26.6.3"
     },
     "scripts": {

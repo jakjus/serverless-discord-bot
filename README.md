@@ -1,7 +1,7 @@
 # Discord Serverless Bot with Lambda Proxy
 
 ## Introduction
-Discord Serverless Bot with Lambda Proxy is an example SAM application, that implements an additional API Gateway with Proxy Lambda Function, in order to split functions based on event's request body.
+Discord Serverless Bot with Lambda Proxy is an example SAM application (template), that uses AWS Services - AWS API Gateway with Proxy AWS Lambda Function, in order to split functions based on event's request body.
 
 Discord application sends all events to one endpoint URL. Our architecture prevents Discord Serverless Bot from becoming a Lambda Monolith.
 
@@ -13,8 +13,16 @@ Discord application sends all events to one endpoint URL. Our architecture preve
 Prerequisites:
 - AWS SAM CLI
 - AWS User connected to CLI
-- Discord Application created and invited to guild
+- Discord Application created and invited to your test guild
 
+### Clone the boilerplate
+Clone this repo with AWS SAM
+
+```
+mkdir serverless-discord-bot && \
+cd serverless-discord-bot && \
+sam init --location gh:jakjus/serverless-discord-bot
+```
 
 ### Register commands
 Register commands on one guild for development (instant):

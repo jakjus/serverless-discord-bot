@@ -1,6 +1,6 @@
 {
     "name": "serverless-discord-bot",
-    "description": "Bolerplate for Serverless Discord Bot on AWS using AWS SAM.",
+    "description": "Boilerplate for Serverless Discord Bot on AWS using AWS SAM.",
     "author": "jakjus",
     "version": "0.0.1",
     "private": true,
@@ -10,8 +10,9 @@
         "yaml": "^2.1.1"
     },
     "devDependencies": {
-        "boxen": "4.0",
-        "jest": "^26.6.3"
+        "dotenv": "^16.0.1",
+        "jest": "^26.6.3",
+        "yaml-cfn": "^0.3.1"
     },
     "scripts": {
         "test": "jest"

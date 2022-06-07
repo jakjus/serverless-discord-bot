@@ -4,7 +4,13 @@
 
 const axios = require('axios').default;
 
-exports.helloFromLambdaHandler = async (event) => {
+exports.data = {
+  name: 'hello',
+  type: 1,
+  description: 'replies with hello world.'
+}
+
+exports.handler = async (event) => {
   const body = JSON.parse(event.Records[0].Sns.Message)
   // May do something here with body
   // Body contains Discord command details

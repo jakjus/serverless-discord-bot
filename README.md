@@ -1,7 +1,7 @@
 # Discord Serverless Bot with Lambda Proxy
 
 ## Introduction
-Discord Serverless Bot with Lambda Proxy is an example SAM application (template), that uses AWS Services - AWS API Gateway with Proxy AWS Lambda Function, in order to split functions based on event's request body.
+Discord Serverless Bot with Lambda Proxy is an example SAM application (template or framework), that uses AWS Services - AWS API Gateway with Proxy AWS Lambda Function, in order to split functions based on event's request body.
 
 Discord application sends all events to one endpoint URL. Our architecture prevents Discord Serverless Bot from becoming a Lambda Monolith.
 
@@ -15,24 +15,34 @@ Prerequisites:
 - AWS User connected to CLI
 - Discord Application created and invited to your test guild
 
-### Clone the boilerplate
+### Clone the boilerplate and install required packages
 Clone this repo with AWS SAM
 
 ```
-mkdir serverless-discord-bot && \
-cd serverless-discord-bot && \
-sam init --location gh:jakjus/serverless-discord-bot
+mkdir my-serverless-discord-bot && \
+cd my-serverless-discord-bot && \
+sam init --location gh:jakjus/serverless-discord-bot && \
 ```
+
+Install required packages
+```
+npm install
+```
+
+### Prepare
+Get your development Guild (Discord Server) Id by enabling Developer Mode in settings and right-clicking your guild.
+
+Get App Id and Bot Token from Discord Developers Portal.
+
+Copy `.env.example` to `.env` and fill `.env` with real values.
 
 ### Register commands
 Register commands on one guild for development (instant):
 ```
-node register_commands/register.js --env dev --guild-id YOUR_GUILD_ID --bot-token YOUR_BOT_TOKEN --app-id YOUR_APPLICATION_ID
+node register_commands/register.js
 ```
-Or register commands globally for production (up to 1h refresh):
-```
-node register_commands/register.js --env prod --bot-token YOUR_BOT_TOKEN --app-id YOUR_APPLICATION_ID
-```
+
+*If you will not specify `GUILD_ID` environment variable, deployed commands will be global.*
 
 ### Build and deploy
 Build and deploy with:
@@ -41,9 +51,13 @@ sam build && sam deploy --guided
 ```
 
 ## Add your own function
-1. Add command in `register_commands/commands.yaml` and register them again.
-2. Create handler for new function in `src/handlers/` similarly to existing ones.
-3. Add reference to new handler in `template.yaml` similarly to `helloFromLambdaFunction`. Change `Properties.Handler` and `Events.SNSEvent.Properties.FilterPolicy.command`.
+1. Create a new command in `src/modules/example/another-one.js` similar to `hello-from-lambda.js`. It must have another name within the `exports.data`.
+2. Generate template, register commands, build and deploy using:
+```
+node generate_template/generate.js && \
+node register_commands/register.js && \
+sam build && sam deploy
+```
 
 ## Clean all
 ```

@@ -15,8 +15,6 @@ phases:
       - npm prune --production
   build:
     commands:
-      # Deploy commands to Discord
-      # - node register_commands.js
       # Use AWS SAM to package the application by using AWS CloudFormation
       - aws cloudformation package --template template.yaml --s3-bucket $S3_BUCKET --output-template template-export.yml
 artifacts:

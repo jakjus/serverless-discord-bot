@@ -29,6 +29,8 @@ Install required packages
 npm install
 ```
 
+We are templating the main `template.yaml` file with `generate_template/generate.js`, so it's not in the main folder by default.
+
 ### Prepare
 Get your development Guild (Discord Server) Id by enabling Developer Mode in settings and right-clicking your guild.
 

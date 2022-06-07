@@ -2,7 +2,7 @@ exports.templateResource = (module, command, name) => {
   return {
     "Type": "AWS::Serverless::Function",
     "Properties": {
-      "Handler": `src/modules/${module}/${command}.handler`,
+      "Handler": `src/modules/${module}/${command.replace('.js','')}.handler`,
       "Runtime": "nodejs14.x",
       "Architectures": [
         "x86_64"

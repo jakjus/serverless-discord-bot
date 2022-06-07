@@ -35,6 +35,8 @@ Resources:
       Description: A Lambda function that returns a static string.
       Policies:
         - AWSLambdaBasicExecutionRole
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt MainSNSTopic.TopicName
       Events:
         ApiEvent:
           Type: Api

@@ -21,7 +21,7 @@ Clone this repo with AWS SAM
 ```
 mkdir my-serverless-discord-bot && \
 cd my-serverless-discord-bot && \
-sam init --location gh:jakjus/serverless-discord-bot && \
+sam init --location gh:jakjus/serverless-discord-bot
 ```
 
 Install required packages

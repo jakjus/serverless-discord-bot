@@ -3,3 +3,4 @@ node_modules
 samconfig.toml
 template.yaml
 .env
+.DS_Store

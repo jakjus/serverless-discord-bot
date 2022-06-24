@@ -2,7 +2,7 @@
  * A Lambda function that replies to interaction with static string
  */
 
-const axios = require('axios').default;
+const { globalHandler } = require('src/modules/handler.js')
 
 exports.data = {
   name: 'hello',
@@ -10,19 +10,15 @@ exports.data = {
   description: 'replies with hello world.'
 }
 
-exports.handler = async (event) => {
-  const body = JSON.parse(event.Records[0].Sns.Message)
+const action = async (body) => {
   // May do something here with body
   // Body contains Discord command details
   let response = {
     "content": "Hello from Lambda!"
   }
+  return response
+}
 
-  await axios.patch(`https://discord.com/api/v10/webhooks/${body.application_id}/${body.token}/messages/@original`, response)
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+exports.handler = async (event) => {
+  globalHandler(event, action)
 }

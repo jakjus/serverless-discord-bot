@@ -2,7 +2,7 @@
  * A Lambda function that replies to interaction with static string
  */
 
-const { globalHandler } = require('src/modules/handler.js')
+const { globalHandler } = require('../handler.js')
 
 exports.data = {
   name: 'hello',
@@ -19,6 +19,6 @@ const action = async (body) => {
   return response
 }
 
-exports.handler = async (event) => {
+exports.handler = (event) => {
   globalHandler(event, action)
 }

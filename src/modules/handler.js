@@ -7,12 +7,12 @@ exports.globalHandler = async (event, action) => {
    * text interactions.
    */
   const body = JSON.parse(event.Records[0].Sns.Message)
-  const response = action(body)
-  await axios.patch(`https://discord.com/api/v10/webhooks/${body.application_id}/${body.token}/messages/@original`, response)
+  const response = await action(body)
+  axios.patch(`https://discord.com/api/v10/webhooks/${body.application_id}/${body.token}/messages/@original`, response)
     .then(function (response) {
       //console.log(response);
     })
     .catch(function (error) {
-      //console.log(error);
+      console.log(error);
     });
 }

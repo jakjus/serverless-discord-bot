@@ -32,6 +32,6 @@ exports.templateResource = (module, command, name) => {
 }
 
 exports.handleNameChange = (resource, name) => {
-  resource.Properties.Events.SNSEvent.Properties.FilterPolicy.command = name
+  resource.Properties.Events.SNSEvent.Properties.FilterPolicy.command = [name]
   return resource
 }

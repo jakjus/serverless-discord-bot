@@ -8,8 +8,9 @@ exports.handler = async (event) => {
     // Checking signature (requirement 1.)
     // Your public key can be found on your application in the Developer Portal
     const PUBLIC_KEY = process.env.PUBLIC_KEY;
-    const signature = event.headers['x-signature-ed25519']
-    const timestamp = event.headers['x-signature-timestamp'];
+    const signature = event.headers['x-signature-ed25519'] || event.headers['X-Signature-Ed25519'];
+    const timestamp = event.headers['x-signature-timestamp'] || event.headers['X-Signature-Timestamp'];
+
 
     const isVerified = nacl.sign.detached.verify(
       Buffer.from(timestamp + strBody),

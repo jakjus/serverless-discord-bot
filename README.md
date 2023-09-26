@@ -14,6 +14,7 @@ Prerequisites:
 - AWS SAM CLI
 - AWS User connected to CLI
 - Discord Application created and invited to your test guild
+- Node.js
 
 ### Clone the boilerplate and install required packages
 Clone this repo with AWS SAM
@@ -67,7 +68,7 @@ sam build && sam deploy
 
 ## Clean all
 ```
-sam destroy
+sam delete
 ```
 
 
